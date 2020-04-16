@@ -1,0 +1,4 @@
+.vscode/*
+dbSecrets.js
+secretKey.js
+node_modules
