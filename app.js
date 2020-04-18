@@ -7,6 +7,15 @@ var routes = require("./routes");
 
 const config = require("./config")[process.env.ENV];
 
+try {
+  const dbSecrets = require("./dbSecrets");
+  config.dbUrl = dbSecrets.dbUrl;
+} catch (e) {
+  if (e.code === "MODULE_NOT_FOUND") {
+    console.warn(`dbSecrets file not found using dbUrl as ${config.dbUrl}`);
+  }
+}
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -19,7 +28,7 @@ mongoose.connect(
     if (err) {
       throw err;
     }
-    console.log("connected");
+    console.log(`serving from db: ${config.dbUrl}`);
   }
 );
 
