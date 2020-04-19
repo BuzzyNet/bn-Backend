@@ -113,7 +113,6 @@ router.post("/likes", async (req, res) => {
     res.send({ code: 0 });
   }
 });
-
 router.get("/comments", async (req, res) => {
   const { postId, skip, limit } = req.query;
   let comments = await Post.aggregate([
@@ -160,4 +159,5 @@ router.post("/comments", async (req, res) => {
     res.send({ code: 0, message: "error occured" });
   }
 });
+
 module.exports = router;
