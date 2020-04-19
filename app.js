@@ -18,8 +18,7 @@ try {
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-app.use(routes);
+app.use(`/${config.baseUrl}`, routes(config));
 
 mongoose.connect(
   config.dbUrl,

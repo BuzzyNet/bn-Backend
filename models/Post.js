@@ -5,14 +5,15 @@ const Schema = mongoose.Schema;
 
 const commentSchema = new Schema({
   author: { type: Schema.Types.ObjectId, ref: "UserProfile" },
+  comment: { type: String },
   likes: { type: Number },
   posted: { type: Date, default: new Date() },
-  replies: { type: [commentSchema] },
 });
 
 const postSchema = new Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: "UserProfile" },
+    title: { type: String },
     content: { type: String },
     comments: { type: [commentSchema] },
     likes: {
