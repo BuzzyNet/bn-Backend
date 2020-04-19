@@ -33,7 +33,7 @@ const profileSchema = new Schema(
   { timestamps: true }
 );
 
-UserProfile.pre("save", function (next) {
+profileSchema.pre("save", function (next) {
   var user = this;
   if (!user.isModified(dob)) return next();
   const age = Math.abs(

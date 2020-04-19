@@ -1,4 +1,6 @@
 module.exports = {
-  userProfile: require("./UserProfile"),
+  UserProfile: require("./UserProfile"),
   Post: require("./Post"),
+  Followers: require("./followers"),
+  Following: require("./following"),
 };
