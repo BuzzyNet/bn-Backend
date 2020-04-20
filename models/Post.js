@@ -15,10 +15,12 @@ const postSchema = new Schema(
     userId: { type: Schema.Types.ObjectId, ref: "UserProfile" },
     title: { type: String },
     content: { type: String },
-    comments: { type: [commentSchema] },
+    isDeleted: { type: Boolean, default: false },
+    comments: { type: [commentSchema], default: [] },
     likes: {
       type: [Schema.Types.ObjectId],
       ref: "UserProfile",
+      default: [],
     },
     location: {
       lat: { type: Number },
