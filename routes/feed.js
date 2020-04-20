@@ -25,7 +25,7 @@ router.get("/user_:userId/", async (req, res) => {
       },
     },
     {
-      $match: { userId: { $in: following } },
+      $match: { userId: { $in: following }, isDeleted: false },
     },
 
     {
@@ -35,7 +35,6 @@ router.get("/user_:userId/", async (req, res) => {
         },
       },
     },
-    // { $project: { comments: { $slice: ["$comments", 3] } } },
     {
       $lookup: {
         from: "userprofiles",
@@ -83,7 +82,7 @@ router.get("/user_:userId/", async (req, res) => {
 router.get("/Likes", async (req, res) => {
   const { postId } = req.query;
   likes = await Post.aggregate([
-    { $match: { _id: ObjectId(postId) } },
+    { $match: { _id: ObjectId(postId), isDeleted: false } },
     {
       $lookup: {
         from: "userprofiles",
@@ -94,8 +93,11 @@ router.get("/Likes", async (req, res) => {
     },
     { $project: { likes: 1 } },
   ]);
-
-  res.send(likes);
+  if (likes.length == 0) {
+    res.send({ code: 0, message: "post Does not exist" });
+  } else {
+    res.send(likes);
+  }
 });
 
 router.post("/likes", async (req, res) => {
@@ -116,7 +118,7 @@ router.post("/likes", async (req, res) => {
 router.get("/comments", async (req, res) => {
   const { postId, skip, limit } = req.query;
   let comments = await Post.aggregate([
-    { $match: { _id: ObjectId(postId) } },
+    { $match: { _id: ObjectId(postId), isDeleted: false } },
     { $project: { comments: 1, _id: 1 } },
     {
       $lookup: {
@@ -137,7 +139,7 @@ router.get("/comments", async (req, res) => {
     return obj;
   });
 
-  //naive solution figure out how to paginate in the aggregation pipeline
+  //naive solution.. figure out how to paginate in the aggregation pipeline
   if (skip && limit) comments = comments.slice(skip, skip + limit);
 
   res.send(comments);
@@ -150,7 +152,7 @@ router.post("/comments", async (req, res) => {
 
   try {
     await Post.findOneAndUpdate(
-      { _id: ObjectId(postId) },
+      { _id: ObjectId(postId), isDeleted: false },
       { $push: { comments: commentObject } },
       { projection: { likes: 1 }, useFindAndModify: false }
     );
